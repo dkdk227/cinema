@@ -420,6 +420,7 @@ input {
         #0d001a 80%,
         #050010 100%
     );
+    background-color: black;
     background-attachment: fixed;
     min-height: 100vh;
     }
