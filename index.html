@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema | Find Your Movie</title>
+    <link rel="stylesheet" href="t7.1.css">
+</head>
+<body>
+    <header><h1>Кино</h1></header>
+    <section>
+        <div id="container">
+            <div class="inpt">
+                <div class="search-row">
+                    <input id="searchInput" type="text" placeholder="Поиск фильма...">
+                    <button id="searchBtn">🔍</button>
+                </div>
+                <div class="controls-row">
+                    <div class="burgers">
+                        <button id="burgerGenres">Жанр</button>
+                        <button id="burgerYears">Год</button>
+                        <button id="burgerFilters">Фильтр</button>
+                    </div>
+                </div>
+                <div class="tabs">
+                    <button id="tabFavorite">❤️</button>
+                    <button id="tabWatchLater">🕐</button>
+                </div>
+            </div>
+                <div id="filterDropdown" style="display: none;">
+                    <button id="filterAll">Всё</button>
+                    <button id="filterMovies">Фильмы</button>
+                    <button id="filterTV">Сериалы</button>
+                </div>
+                <div id="genreDropdown" style="display: none;"></div>
+                <div id="yearDropdown" style="display: none;"></div>
+                <p id="nameYearOrGenre"></p>
+
+            <p id="trim"></p>
+            <div id="searchResults"></div>  
+            <div class="namemovie">            
+                <h2 id="name"></h2>
+                <i><p id="originalName"></p></i>
+            </div> 
+            <div id="inf">
+                <div id="infor">
+
+                <p><span id="type"></span><br><span id="year"></span><br><span id="genre"></span><br><span id="rating"></span><br><span id="country"></span><br><span id="duration"></span></p>
+                <p id="plot"></p>
+                <p id="actors"></p>
+                <div id="treiler"></div>
+                </div>
+                <div>
+                    <div id="poster"></div>
+                    <div class="FW">
+                        <button id="btnFavorite" style="display: none;">❤️ Любимое</button>
+                        <button id="btnWatchLater" style="display: none;">🕐 Смотреть позже</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="scrollBtns">
+        <button id="scrollUp">▲</button>
+        <button id="scrollDown">▼</button>
+    </div>    
+    <script src="t7.1.js"></script>
+</body>
+</html>
