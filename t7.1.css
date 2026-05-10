@@ -20,6 +20,7 @@ body {
     background-repeat: no-repeat; 
     background-position: center;
     background-attachment: fixed;
+    background-color: black;
 }
 header {
     font-size: 70px;
