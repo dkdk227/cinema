@@ -13,6 +13,10 @@ header, section, #container, .movieCard, #name, #inf {
         transform: translateY(0);
     }
 }
+html {
+    background-color: #050010;
+    min-height: 100%;
+}
 
 body {
     background-image: url(fon.jpeg);
@@ -20,7 +24,6 @@ body {
     background-repeat: no-repeat; 
     background-position: center;
     background-attachment: fixed;
-    background-color: black;
 }
 header {
     font-size: 70px;
@@ -420,7 +423,6 @@ input {
         #0d001a 80%,
         #050010 100%
     );
-    background-color: black;
     background-attachment: fixed;
     min-height: 100vh;
     }
