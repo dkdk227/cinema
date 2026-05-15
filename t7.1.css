@@ -24,6 +24,7 @@ body {
     background-repeat: no-repeat; 
     background-position: center;
     background-attachment: fixed;
+    min-height: 98.9vh;
 }
 header {
     font-size: 70px;
@@ -211,7 +212,7 @@ input {
     padding: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     text-align: right;
-    width: 10%;
+    width: 5%;
     margin-left: 75%;
     position: absolute;
     z-index: 100;
@@ -220,6 +221,8 @@ input {
     opacity: 1;
     transform: translateY(0);
     transition: all 0.3s ease;
+    margin-left: 84.5%;
+    margin-top: 10px;
 }
 
 #filterDropdown button {
@@ -235,7 +238,8 @@ input {
     animation: none;
     transform: translateY(0px);
     opacity: 1;
-    margin: 3px;
+    margin: auto;
+    margin-top: 10px;
 }
 
 #filterDropdown button:hover {
@@ -549,4 +553,28 @@ input {
         margin-left: 20%;
         width: 40%;
     }
+}
+
+#director button, #actors button {
+    background-color:  rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.164);
+    border-radius: 10px;
+    padding: 6px, 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    cursor: pointer;
+    max-width: 100%;
+    word-break: break-word;
+}
+#director, #actors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+#director button:hover, #actors button:hover {
+    background-color: rgba(255, 255, 255, 0.145);
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
