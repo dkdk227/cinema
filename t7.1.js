@@ -26,6 +26,7 @@ let currentMovieData = null
 let tabFavorite = document.getElementById("tabFavorite")
 let tabWatchLater = document.getElementById("tabWatchLater")
 let originalName = document.getElementById("originalName")
+let director = document.getElementById("director")
 
 // Кнопки вверх вниз
 document.getElementById("scrollUp").addEventListener('click', function(){
@@ -415,7 +416,34 @@ function showDetails(movie, type) {
                 durationEl.textContent = `${data.number_of_seasons} ${declension(data.number_of_seasons, "сезон", "сезона", "сезонов")} ${data.number_of_episodes} серий`
             
                 let countries = data.production_countries.map(c => c.name).join(", ")
-                countryEl.innerHTML = `<strong>Страна: </strong> ${countries}`               
+                countryEl.innerHTML = `<strong>Страна: </strong> ${countries}` 
+                
+                let creators = data.created_by.map(p =>  p.name).join(", ")
+                director.innerHTML = `<strong>Создатель: </strong> `
+                let directors = data.created_by
+
+                directors.forEach(d => {
+                    let btn = document.createElement("button")
+                    btn.textContent = d.name
+                    btn.addEventListener('click', function(){
+                        searchResults.innerHTML = ""
+                        nameYearOrGenre.textContent = d.name
+                        
+                        fetch(`https://api.themoviedb.org/3/person/${d.id}/combined_credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
+                            .then(r => r.json())
+                            .then(data => {
+                                let allMovies = [...data.cast, ...data.crew]
+                                let uniqueMovies = allMovies.filter((movie, index, self) => index === self.findIndex(m => m.id === movie.id))
+
+                                uniqueMovies.forEach(movie => {
+                                    let card = createCard(movie, movie.media_type)
+                                    searchResults.appendChild(card)
+                                })
+                            })
+                            window.scrollTo({ top: 0, behavior: "smooth"})
+                    })
+                    director.appendChild(btn)
+                })                
             })
 
         fetch(`https://api.themoviedb.org/3/tv/${movie.id}/videos?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
@@ -505,7 +533,7 @@ function declension(number, one, two, five) {
     return five                          // 5+ → "часов"
 }
 
-//загрузка актеров 
+//загрузка актеров, режисеров
 function loadCredits(id, type) {
     let endpoint = type === "tv" ? `https://api.themoviedb.org/3/tv/${id}/credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru` : `https://api.themoviedb.org/3/movie/${id}/credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`
 
@@ -514,8 +542,56 @@ function loadCredits(id, type) {
         .then(credits => {
                                 
             let actorsNames = credits.cast.map(actor => actor.name).slice(0, 5).join(", ")
-            actors.innerHTML = `<strong>В ролях:</strong> ${actorsNames}`
+            actors.innerHTML = `<strong>В ролях:</strong> `
+            credits.cast.slice(0,5).forEach(actor => {
+                let btn = document.createElement("button")
+                btn.textContent = actor.name
+                btn.addEventListener('click', function(){
+                    searchResults.innerHTML = ""
+                    nameYearOrGenre.textContent = actor.name
+
+                    fetch(`https://api.themoviedb.org/3/person/${actor.id}/combined_credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if(!data.cast) return
+                            data.cast.forEach(movie => {
+                                let card = createCard(movie, movie.media_type)
+                                searchResults.appendChild(card)
+                            })
+                        })
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                })
+                actors.appendChild(btn)
+            })
             console.log(credits.crew)
+
+            if (type === "movie") {
+                let directorsNames = credits.crew.filter(person => person.job === "Director").map(person => person.name).join(", ")
+                director.innerHTML = `<strong>Режисер:</strong> `
+                let directors = credits.crew.filter(p => p.job === "Director")
+                
+                directors.forEach(d => {
+                    let btn = document.createElement("button")
+                    btn.textContent = d.name
+                    btn.addEventListener('click', function(){
+                        searchResults.innerHTML = ""
+                        nameYearOrGenre.textContent = d.name
+
+                        fetch(`https://api.themoviedb.org/3/person/${d.id}/combined_credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if(!data.cast) return
+
+                                data.cast.forEach(movie => {
+                                    let card = createCard(movie, movie.media_type)
+                                    searchResults.appendChild(card)
+                                })
+                            })
+                        window.scrollTo({ top: 0, behavior: "smooth" })
+                    })
+                    director.appendChild(btn)
+                })   
+            }
         })
 }
 
