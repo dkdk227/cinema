@@ -27,6 +27,11 @@ let tabFavorite = document.getElementById("tabFavorite")
 let tabWatchLater = document.getElementById("tabWatchLater")
 let originalName = document.getElementById("originalName")
 let director = document.getElementById("director")
+let castInf = document.getElementById("castInf")
+let photo = document.getElementById("photo")
+let karier = document.getElementById("karier")
+let birthday = document.getElementById("birthday")
+let placeOfBirth = document.getElementById("placeOfBirth")
 
 // Кнопки вверх вниз
 document.getElementById("scrollUp").addEventListener('click', function(){
@@ -47,6 +52,7 @@ document.addEventListener('click', function(event) {
                 genreDropdown.style.display = "none"
             }, 300)
         }
+
     }
     if (!burgerYears.contains(event.target) && !yearDropdown.contains(event.target)) {
         if (yearDropdown.style.display === "flex") {
@@ -87,6 +93,7 @@ fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=8210631f276e7f9626a
                 currentGenreId = id
                 loadGenreMovies()
                 nameYearOrGenre.textContent = genreName
+                castInf.style.display = "none"
             })
 
             genreDropdown.appendChild(genreBtn)
@@ -111,7 +118,7 @@ buttonSrc.addEventListener('click', function(){
             genreDropdown.style.display = "none"
         }, 10)
     }
-
+    castInf.style.display = "none"
 })
 inputSrc.addEventListener('keydown', function(event){
     if (event.key === "Enter") {
@@ -131,6 +138,8 @@ inputSrc.addEventListener('keydown', function(event){
                 genreDropdown.style.display = "none"
             }, 10)
         }
+
+            castInf.style.display = "none"
     }
 })
 
@@ -147,6 +156,7 @@ burgerGenres.addEventListener('click', function(){
             genreDropdown.style.opacity = "1"
             genreDropdown.style.transform = "translateY(0)"
         }, 10)
+        
     } else {
         genreDropdown.style.opacity = "0"
         genreDropdown.style.transform = "translateY(-10px)"
@@ -268,6 +278,7 @@ filterTV.addEventListener('click', function(){
 
 // Вкладка любимые фильмы и сериалы
 tabFavorite.addEventListener('click', function(){
+    castInf.style.display = "none"
     nameYearOrGenre.textContent = "Любимые"
     let favorites = JSON.parse(localStorage.getItem("favorites")) ?? []
     searchResults.innerHTML = ""
@@ -312,6 +323,7 @@ tabFavorite.addEventListener('click', function(){
 }) 
 // Вкладка смотреть позже
 tabWatchLater.addEventListener('click', function(){
+    castInf.style.display = "none"
     nameYearOrGenre.textContent = "Смотреть позже"
     let watchLater = JSON.parse(localStorage.getItem("watchLater")) ?? []
     searchResults.innerHTML = ""
@@ -426,9 +438,17 @@ function showDetails(movie, type) {
                     let btn = document.createElement("button")
                     btn.textContent = d.name
                     btn.addEventListener('click', function(){
+                        castInf.style.display = "flex"
                         searchResults.innerHTML = ""
                         nameYearOrGenre.textContent = d.name
-                        
+                        fetch(`https://api.themoviedb.org/3/person/${d.id}?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
+                            .then(r => r.json())
+                            .then(data => {                          
+                                photo.innerHTML = data.profile_path ? `<img src="https://image.tmdb.org/t/p/w300${data.profile_path}">` : `<img src="nofoto.webp">`
+                                karier.textContent = `Карьера: ${data.known_for_department}`
+                                birthday.textContent = `Дата рождения: ${data.birthday}`
+                                placeOfBirth.textContent = `Место рождения: ${data.place_of_birth}`
+                            })
                         fetch(`https://api.themoviedb.org/3/person/${d.id}/combined_credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
                             .then(r => r.json())
                             .then(data => {
@@ -540,16 +560,25 @@ function loadCredits(id, type) {
     fetch(endpoint)
         .then(response => response.json())
         .then(credits => {
-                                
+            // Актеры             
             let actorsNames = credits.cast.map(actor => actor.name).slice(0, 5).join(", ")
             actors.innerHTML = `<strong>В ролях:</strong> `
-            credits.cast.slice(0,5).forEach(actor => {
+            credits.cast.slice(0,20).forEach(actor => {
                 let btn = document.createElement("button")
                 btn.textContent = actor.name
                 btn.addEventListener('click', function(){
+                    castInf.style.display = "flex"
                     searchResults.innerHTML = ""
                     nameYearOrGenre.textContent = actor.name
-
+                    fetch(`https://api.themoviedb.org/3/person/${actor.id}?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
+                        .then(r => r.json())
+                        .then(data => {                          
+                            photo.innerHTML = data.profile_path ? `<img src="https://image.tmdb.org/t/p/w300${data.profile_path}">` : `<img src="nofoto.webp">`
+                            karier.textContent = `Карьера: ${data.known_for_department}`
+                            birthday.textContent = `Дата рождения: ${data.birthday}`
+                            placeOfBirth.textContent = `Место рождения: ${data.place_of_birth}`
+                        })
+                    
                     fetch(`https://api.themoviedb.org/3/person/${actor.id}/combined_credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
                         .then(response => response.json())
                         .then(data => {
@@ -565,6 +594,7 @@ function loadCredits(id, type) {
             })
             console.log(credits.crew)
 
+            // Режисеры фильмов
             if (type === "movie") {
                 let directorsNames = credits.crew.filter(person => person.job === "Director").map(person => person.name).join(", ")
                 director.innerHTML = `<strong>Режисер:</strong> `
@@ -574,9 +604,17 @@ function loadCredits(id, type) {
                     let btn = document.createElement("button")
                     btn.textContent = d.name
                     btn.addEventListener('click', function(){
+                        castInf.style.display = "flex"
                         searchResults.innerHTML = ""
                         nameYearOrGenre.textContent = d.name
-
+                        fetch(`https://api.themoviedb.org/3/person/${d.id}?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
+                            .then(r => r.json())
+                            .then(data => {                          
+                                photo.innerHTML = data.profile_path ? `<img src="https://image.tmdb.org/t/p/w300${data.profile_path}">` : `<img src="nofoto.webp">`
+                                karier.textContent = `Карьера: ${data.known_for_department}`
+                                birthday.textContent = `Дата рождения: ${data.birthday}`
+                                placeOfBirth.textContent = `Место рождения: ${data.place_of_birth}`
+                            })
                         fetch(`https://api.themoviedb.org/3/person/${d.id}/combined_credits?api_key=8210631f276e7f9626a0176b1e2c786b&language=ru`)
                             .then(response => response.json())
                             .then(data => {
@@ -639,6 +677,7 @@ function createYears() {
             currentPage = 1
             loadMoviesByYear(year)
             nameYearOrGenre.textContent = year
+            castInf.style.display = "none"
         })
     }
 }
