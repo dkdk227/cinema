@@ -578,3 +578,18 @@ input {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+
+#treiler a {
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.162);
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.21);
+    transition: all 0.2s ease;
+}
+
+#treiler a:hover {
+    background-color: rgba(255, 255, 255, 0.317);
+}
